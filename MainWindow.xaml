@@ -9,6 +9,7 @@
         xmlns:behaviors="http://schemas.microsoft.com/xaml/behaviors"
         Title="{Binding Path=Title, ElementName=Browser, Converter={StaticResource TitleConverter}}"
         WindowState="Maximized">
+    <!-- Binding Path=Title 将浏览器页面的title 赋值给程序窗口的标题 -->
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
