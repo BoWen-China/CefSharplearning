@@ -45,7 +45,7 @@ namespace CefSharpExampleNetCore
         private void life_OpenInNewTab(object sender,EventArgs e)
         {
             var ev = (NewTabEventArgs)e;
-            //this.Dispatcher.Invoke(() => CreateNewTab(e.Url));
+            this.Dispatcher.Invoke(() => CreateNewTab(ev.Url));
         }
 
         // 创建一个新的标签
