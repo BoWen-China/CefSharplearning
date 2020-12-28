@@ -8,9 +8,73 @@
         xmlns:behaviours="clr-namespace:CefSharpExampleNetCore.Behaviours"
         xmlns:behaviors="http://schemas.microsoft.com/xaml/behaviors"
         Title="{Binding Path=Title, ElementName=Browser, Converter={StaticResource TitleConverter}}"
+        Closed="" Background="WhiteSmoke"
+        TextOptions.TextRenderingMode="Auto"  TextOptions.TextFormattingMode="Display"
         WindowState="Maximized">
+    <!-- 窗口资源 -->
+    <Window.Resources>
+        <Style TargetType="ProgressBar" x:Key="AutoWidth">
+            <Setter Property="Width" Value="auto"/>
+        </Style>
+        <Style TargetType="{x:Type TextBox}" x:Key="TxtAddress">
+            <Setter Property="BorderBrush" Value="#FFC8C8C8" />
+            <Setter Property="Background" Value="WhiteSmoke"/>
+            <Style.Resources>
+                <Style TargetType="{x:Type Border}">
+                    <Setter Property="CornerRadius" Value="5"/>
+                </Style>
+            </Style.Resources>
+        </Style>
+        <Style TargetType="{x:Type Button}" x:Key="IconButton">
+            <Setter Property="FontFamily" Value="pack://application:,,,/Resources/Fonts/iconfont.ttf#TangDouClient" />
+            <Setter Property="BorderBrush" Value="#FFC8C8C8" />
+            <Style.Resources>
+                <Style TargetType="{x:Type Border}">
+                    <Setter Property="CornerRadius" Value="5" />
+                </Style>
+            </Style.Resources>
+        </Style>
+        <Style TargetType="DockPanel" x:Key="TopBarPanel">
+            <Style.Resources>
+                <Style TargetType="{x:Type Border}">
+                    <Setter Property="BorderBrush" Value="Gray" />
+                    <Setter Property="BorderThickness" Value="0,0,0,1" />
+                    <Setter Property="Padding" Value="5" />
+                </Style>
+            </Style.Resources>
+        </Style>
+        <Style TargetType="{x:Type TabItem}" x:Key="CloseTab">
+            <Style.Resources>
+                <Style TargetType="{x:Type Border}">
+                    <Setter Property="CornerRadius" Value="5,5,0,0" />
+                </Style>
+                <Style TargetType="{x:Type Button}">
+                    <Style.Resources>
+                        <Style TargetType="{x:Type Border}">
+                            <Setter Property="CornerRadius" Value="7" />
+                        </Style>
+                    </Style.Resources>
+                </Style>
+            </Style.Resources>
+            <Setter Property="HeaderTemplate">
+                <Setter.Value>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding}" Padding="5,2" MaxWidth="120" />
+                            <Button Click="BtnItemClose_Click" x:Name="BtnItemClose" Visibility="Visible" Height="17" Width="17" FontFamily="{StaticResource TangDouClient}" FontSize="11" BorderThickness="0">&#xe6a6;</Button>
+                        </StackPanel>
+                        <DataTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter TargetName="BtnItemClose" Property="Visibility" Value="Visible" />
+                            </Trigger>
+                        </DataTemplate.Triggers>
+                    </DataTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
     <!-- Binding Path=Title 将浏览器页面的title 赋值给程序窗口的标题 -->
-    <Grid>
+    <!--<Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition />
@@ -80,5 +144,14 @@
                 </TextBlock>
             </StatusBarItem>
         </StatusBar>
+    </Grid>-->
+    <Grid UseLayoutRounding="True">
+        <Grid x:Name="mBody" Margin="0,0,0,25">
+            <TabControl x:Name="BrowserTabs" Padding="0" BorderThickness="0,1" Margin="0"/>
+        </Grid>
+        <Grid x:Name="copyRight" Height="25" VerticalAlignment="Bottom">
+            <Border BorderThickness="0" BorderBrush="#99000000" ></Border>
+            <Label Foreground="#B2000000" HorizontalAlignment="Center" >版权所有2006-2018 唐风汉语保留所有权利</Label>
+        </Grid>
     </Grid>
 </Window>
