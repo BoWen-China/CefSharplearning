@@ -1,4 +1,5 @@
-﻿using CefSharp.Wpf;
+﻿using CefSharp;
+using CefSharp.Wpf;
 using CefSharpExampleNetCore.Behaviours;
 using CefSharpExampleNetCore.Handler;
 using System;
@@ -38,11 +39,17 @@ namespace CefSharpExampleNetCore
             // 浏览器菜单对象 
             // 实现上下文菜单功能（应该是右键出来的上下文菜单）
             Browser.MenuHandler = new MenuHandler();
+            // this 指代 MainWindow 对象
             LifeSpanHandler lifeSpanHandler = new LifeSpanHandler(this);
+            // 浏览器生命周期处理
             Browser.LifeSpanHandler = lifeSpanHandler;
+            // 开启新的页面的生命周期
+            lifeSpanHandler.OpenInNewTab += Life_OpenInNewTab;
+            
         }
 
-        private void life_OpenInNewTab(object sender,EventArgs e)
+        // 开启新的标签页生命周期
+        private void Life_OpenInNewTab(object sender,EventArgs e)
         {
             var ev = (NewTabEventArgs)e;
             this.Dispatcher.Invoke(() => CreateNewTab(ev.Url));
@@ -168,10 +175,135 @@ namespace CefSharpExampleNetCore
                 Style = Resources["AutoWidth"] as Style,
                 BorderThickness = new Thickness(0)
             };
-            // 进度条绑定方法
-            progressBar.SetBinding(ProgressBar.IsIndeterminateProperty, new Binding() { Path = new PropertyPath("IsLoading"), Source = browser });
+            // 进度条绑定方法 浏览器是否加载中
+            progressBar.SetBinding(ProgressBar.IsIndeterminateProperty, new Binding() 
+            { 
+                Path = new PropertyPath("IsLoading"), Source = browser 
+            });
+            // 进度条嵌板 对象
+            DockPanel ProgressPanel = new DockPanel()
+            {
+                Height = 2,
+                // 元素显示状态 隐藏
+                Visibility = Visibility.Hidden
+            };
+            // 进度条嵌板针对元素可见参数绑定 
+            // 如果加载中显示进度条嵌板
+            ProgressPanel.SetBinding(DockPanel.VisibilityProperty, new Binding()
+            {
+                Path = new PropertyPath("IsLoading"),
+                Source = browser,
+                // Visibility枚举值布尔转换器
+                Converter = new BooleanToVisibilityConverter()
+            });
+            // 将进度条元素设置在Dock 底部
+            DockPanel.SetDock(ProgressPanel, Dock.Bottom);
+            // 将进度条放置到进度条嵌板中
+            ProgressPanel.Children.Add(progressBar);
+            // 将进度条嵌板 浏览器工具嵌板以及浏览器页面嵌板添加到标签选项卡中
+            TabItemPanel.Children.Add(ProgressPanel);
+            TabItemPanel.Children.Add(TopBarPanel);
+            TabItemPanel.Children.Add(BrowserPanel);
 
+            TabTag tabtag = new TabTag
+            {
+                IsOpen = true,
+                Browser = browser,
+                OrigURL = url,
+                CurURL = url,
+                RefererURL = refererUrl,
+                DateCreated = DateTime.Now
+            };
+            // 新的标签自定义信息
+            newTab.Tag = tabtag;
             return browser;
         }
+        // 关闭窗口
+        private void Window_Closed(object sender,EventArgs e)
+        {
+            Console.WriteLine(BrowserTabs.Items.Count);
+            for (int i = 0; i < BrowserTabs.Items.Count; i++)
+            {
+                var item = BrowserTabs.Items[i] as TabItem;
+                var tabTag = item.Tag as TabTag;
+                var CurBrowser = tabTag.Browser;
+                if (CurBrowser != null)
+                {
+                    // 浏览器对象释放资源
+                    CurBrowser.Dispose();
+                }
+            }
+            // 关闭Cef浏览器
+            Cef.Shutdown();
+        }
+        // 关闭标签页面
+        private void CloseTabItem(TabItem tabItem)
+        {
+            if (BrowserTabs.Items.Count > 1)
+            {
+                var tabTag = tabItem.Tag as TabTag;
+                var CurBrowser = tabTag.Browser;
+                if (CurBrowser != null)
+                {
+                    CurBrowser.Dispose();
+                    BrowserTabs.Items.Remove(tabItem);
+                }
+            }
+        }
+        // 选项卡关闭事件
+        private void BtnItemClose_Click(object sender,RoutedEventArgs e)
+        {
+            var CurrentItem = FindVisualParent<TabItem>(sender as Button);
+            Console.WriteLine(CurrentItem);
+            CloseTabItem(CurrentItem);
+        }
+        // 查找可见的父对象
+        public static T FindVisualParent<T>(DependencyObject dependencyObject) where T : DependencyObject
+        {
+            T result = null;
+            // 参与依赖属性系统的值
+            DependencyObject dp = dependencyObject;
+            while (result == null)
+            {
+                // 返回表示视觉对象的父对象的 DependencyObject 值。
+                dp = VisualTreeHelper.GetParent(dp);
+                result = dp as T;
+                if (dp == null) return null;
+            }
+            return result;
+        }
+        // 查找可视化子元素对象的值
+        private static T FindVisualChild<T>(DependencyObject parent) where T : DependencyObject
+        {
+            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(parent); i++)
+            {
+                DependencyObject child = VisualTreeHelper.GetChild(parent, i);
+                if (child != null && child is T)
+                {
+                    return (T)child;
+                }
+                else
+                {
+                    T childOfChild = FindVisualChild<T>(child);
+                    if (childOfChild != null)
+                    {
+                        return childOfChild;
+                    }
+                }
+            }
+            return null;
+        }
     }
+}
+ internal class TabTag
+{
+    public bool IsOpen;
+
+    public string OrigURL;
+    public string CurURL;
+    public string Title;
+    public string RefererURL;
+
+    public DateTime DateCreated;
+    public ChromiumWebBrowser Browser;
 }

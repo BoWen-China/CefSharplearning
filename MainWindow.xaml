@@ -8,7 +8,7 @@
         xmlns:behaviours="clr-namespace:CefSharpExampleNetCore.Behaviours"
         xmlns:behaviors="http://schemas.microsoft.com/xaml/behaviors"
         Title="{Binding Path=Title, ElementName=Browser, Converter={StaticResource TitleConverter}}"
-        Closed="" Background="WhiteSmoke"
+        Closed="Window_Closed" Background="WhiteSmoke"
         TextOptions.TextRenderingMode="Auto"  TextOptions.TextFormattingMode="Display"
         WindowState="Maximized">
     <!-- 窗口资源 -->
