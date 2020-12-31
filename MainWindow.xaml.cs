@@ -45,7 +45,19 @@ namespace CefSharpExampleNetCore
             Browser.LifeSpanHandler = lifeSpanHandler;
             // 开启新的页面的生命周期
             lifeSpanHandler.OpenInNewTab += Life_OpenInNewTab;
-            
+            Browser.RequestHandler = new TangRequestHandler(this);
+            Browser.PreviewTextInput += (o, e) =>
+            {
+                foreach (var character in e.Text)
+                {
+                    // 根据浏览器对象获取浏览器实例、
+                    // 根据实例找到当前浏览器主机对象发送按键事件
+                    // WM.CHAR,当一个WM_KEYDOWN消息被TranslateMessage函数翻译后，
+                    // WM_CHAR消息会被发布到键盘焦点的窗口中。WM_CHAR消息包含了被按下的键的字符代码。
+                    Browser.GetBrowser().GetHost().SendKeyEvent((int)WM.CHAR, (int)character, 0);
+                }
+                e.Handled = true;
+            };
         }
 
         // 开启新的标签页生命周期
