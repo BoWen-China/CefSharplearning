@@ -6,12 +6,19 @@ using System.Text;
 
 namespace CefSharpExampleNetCore.Handler
 {
+    // 浏览器生命持续时间操作类
     public class LifeSpanHandler : ILifeSpanHandler
     {
         MainWindow mainWindow;
         // Eventhandler 事件处理者
         // 表示将用于处理不具有事件数据的事件的方法。
         public event EventHandler OpenInNewTab;
+
+        // 构造函数
+        public LifeSpanHandler(MainWindow mw)
+        {
+            mainWindow = mw;
+        }
         // 默认行为false
         public bool DoClose(IWebBrowser chromiumWebBrowser, IBrowser browser)
         {
@@ -37,7 +44,7 @@ namespace CefSharpExampleNetCore.Handler
             {
                 bc.Dispatcher.Invoke(() =>
                 {
-
+                    MainWindow.RefererUrl = chromiumWebBrowser.Address;
                 });
                 OpenInNewTab.Invoke(this, new NewTabEventArgs(targetUrl));
             }
