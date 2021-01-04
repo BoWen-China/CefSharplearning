@@ -3,19 +3,10 @@ using CefSharp.Wpf;
 using CefSharpExampleNetCore.Behaviours;
 using CefSharpExampleNetCore.Handler;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace CefSharpExampleNetCore
 {
@@ -24,11 +15,15 @@ namespace CefSharpExampleNetCore
     /// </summary>
     public partial class MainWindow : Window
     {
+        private string DefaultUrl = "https://www.baidu.com";
         // 参照页网址
         public static string RefererUrl = "";
+
+        public event EventHandler OpenInNewtab = delegate { };
         public MainWindow()
         {
             InitializeComponent();
+            CreateNewTab(DefaultUrl);
         }
 
         /**
@@ -58,6 +53,9 @@ namespace CefSharpExampleNetCore
                 }
                 e.Handled = true;
             };
+            
+            // 初始化设置
+            //CefSettings cefSettings = new CefSettings();
         }
 
         // 开启新的标签页生命周期
@@ -223,6 +221,7 @@ namespace CefSharpExampleNetCore
                 Browser = browser,
                 OrigURL = url,
                 CurURL = url,
+                Title = browser.Title,
                 RefererURL = refererUrl,
                 DateCreated = DateTime.Now
             };

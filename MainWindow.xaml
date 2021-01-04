@@ -26,6 +26,7 @@
             </Style.Resources>
         </Style>
         <Style TargetType="{x:Type Button}" x:Key="IconButton">
+            <!-- #后面跟随的是字体名称 -->
             <Setter Property="FontFamily" Value="pack://application:,,,/Resources/Fonts/iconfont.ttf#TangDouClient" />
             <Setter Property="BorderBrush" Value="#FFC8C8C8" />
             <Style.Resources>

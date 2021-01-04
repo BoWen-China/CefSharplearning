@@ -4,6 +4,10 @@
              xmlns:converter="clr-namespace:CefSharpExampleNetCore.Converter"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
+        <!-- #后面跟随的是字题名称 -->
+        <!-- aplication 编译时已知的应用程序数据文件 -->
+        <!-- pack://application:,,, 表示 pack://application:///  -->
+        <FontFamily x:Key="TangDouClient">pack://application:,,,/Resources/Fonts/iconfont.ttf#TangDouClient</FontFamily>
         <converter:TitleConverter x:Key="TitleConverter"/>
         <converter:EnvironmentConverter x:Key="EnvironmentConverter" />
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
