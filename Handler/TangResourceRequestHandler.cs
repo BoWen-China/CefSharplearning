@@ -34,7 +34,8 @@ namespace CefSharpExampleNetCore.Handler
             if (request.ReferrerUrl == "" && MainWindow.RefererUrl != "")
             {
                 // 在导航过程中如何发送Referrer HTTP头值的策略。
-                // 如果指定了`--no-referrers`命令行标志，那么策略值将被忽略，并且永远不会发送Referrer值
+                // 默认值 如果头值是HTTPS，但请求目标是HTTP，则清除referrer头。
+                // 等同于 ClearReferrerOnTransitionFromSecureToInsecure
                 request.SetReferrer(MainWindow.RefererUrl, ReferrerPolicy.Default);
             }
 
