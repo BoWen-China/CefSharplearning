@@ -53,9 +53,19 @@ namespace CefSharpExampleNetCore
                 }
                 e.Handled = true;
             };
-            
+            // 获取启动应用程序可执行文件的路径
+            string startUpPath = System.Windows.Forms.Application.StartupPath;
             // 初始化设置
-            //CefSettings cefSettings = new CefSettings();
+            CefSettings cefSettings = new CefSettings();
+            cefSettings.Locale = "zh-Cn";
+            cefSettings.CefCommandLineArgs.Add("enable-system-flash", "1"); //启用flash
+            cefSettings.CefCommandLineArgs.Add("enable-media-stream", "1"); //启用媒体流
+            cefSettings.CefCommandLineArgs.Add("ppapi-flash-version", "26,0,0,126"); //设置flash插件版本
+            cefSettings.CefCommandLineArgs.Add("ppapi-flash-path", startUpPath + @"Plugins\pepflashplayer.dll");
+            if(!Cef.IsInitialized)
+            {
+                Cef.Initialize(cefSettings);
+            }
         }
 
         // 开启新的标签页生命周期
@@ -73,6 +83,7 @@ namespace CefSharpExampleNetCore
             {
                 Address = url
             };
+            InitBrowser(browser);
             // 初始化浏览器地址栏和导航栏
             DockPanel TopBarPanel = new DockPanel()
             {
