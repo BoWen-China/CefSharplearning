@@ -14,8 +14,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\Fonts\iconfont.ttf" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="CefSharp.Wpf" Version="86.0.241" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.31" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\Fonts\iconfont.ttf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
 
   <ItemGroup>
