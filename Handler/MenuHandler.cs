@@ -13,6 +13,16 @@ namespace CefSharpExampleNetCore.Handler
         {
             // 清除菜单
             model.Clear();
+            // 添加右键菜单功能
+            if(model.Count >0)
+            {
+                model.AddSeparator();
+            }
+            // 开发者工具设置为第一位显示
+            model.AddItem(CefMenuCommand.UserFirst, "Show DevTools");
+            model.AddItem(CefMenuCommand.Reload, "Reload");
+            model.AddItem(CefMenuCommand.UserLast, "Close DevTools");
+
         }
 
         // 调用该函数用来执行从上下文菜单中选择的命令
@@ -21,6 +31,17 @@ namespace CefSharpExampleNetCore.Handler
             //throw new NotImplementedException();
             //false 默认执行
             //true  命令被处理
+            // 如果命令是 UserFirst 打开开发者工具
+            if(commandId == CefMenuCommand.UserFirst)
+            {
+                browser.GetHost().ShowDevTools();
+                return true;
+            }
+            if (commandId == (CefMenuCommand)26502)
+            {
+                browser.GetHost().CloseDevTools();
+                return true;
+            }
             return false;
         }
         // 当上下文菜单被取消时调用，不管菜单是否为空或命令是否被选择。
