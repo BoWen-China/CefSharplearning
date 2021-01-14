@@ -161,7 +161,7 @@ namespace CefSharpExampleNetCore
                 // 边框粗细
                 BorderThickness = new Thickness(0)
             };
-            BrowserTabs.Items.Add(newTab);
+           
             // 设置当前选中的第一项
             BrowserTabs.SelectedItem = newTab;
             newTab.Name = "Tab_" + newTab.TabIndex;
@@ -239,6 +239,8 @@ namespace CefSharpExampleNetCore
             };
             // 新的标签自定义信息
             newTab.Tag = tabtag;
+            // 显示页面
+            BrowserTabs.Items.Add(newTab);
             return browser;
         }
         // 关闭窗口
