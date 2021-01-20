@@ -22,20 +22,7 @@ namespace CefSharpExampleNetCore
         public event EventHandler OpenInNewtab = delegate { };
         public MainWindow()
         {
-            // 获取启动应用程序可执行文件的路径
-            string startUpPath = System.Windows.Forms.Application.StartupPath;
-            // 初始化设置
-            CefSettings cefSettings = new CefSettings();
-            cefSettings.Locale = "zh-Cn";
-            cefSettings.CefCommandLineArgs.Add("enable-system-flash", "1"); //启用flash
-            cefSettings.CefCommandLineArgs.Add("enable-media-stream", "1"); //启用媒体流
-            cefSettings.CefCommandLineArgs.Add("ppapi-flash-version", "26,0,0,126"); //设置flash插件版本
-            cefSettings.CefCommandLineArgs.Add("ppapi-flash-path", startUpPath + @"Plugins\pepflashplayer.dll");
-            // 要在浏览器对象初始化运行前使用
-            // 用用户提供的设置初始化CefSharp 
-            // initialize 和Shutdown 必须在你的主应用程序线程（通常UI 线程）调用
-            // 坚持
-            Cef.Initialize(cefSettings,true);
+          
             InitializeComponent();
             CreateNewTab(DefaultUrl);
         }
@@ -55,6 +42,7 @@ namespace CefSharpExampleNetCore
             // 开启新的页面的生命周期
             lifeSpanHandler.OpenInNewTab += Life_OpenInNewTab;
             Browser.RequestHandler = new TangRequestHandler(this);
+
             Browser.PreviewTextInput += (o, e) =>
             {
                 foreach (var character in e.Text)
@@ -84,6 +72,9 @@ namespace CefSharpExampleNetCore
             {
                 Address = url
             };
+            BrowserSettings browserSettings = new BrowserSettings();
+            browserSettings.Plugins = CefState.Enabled;
+            browser.BrowserSettings = browserSettings;
             InitBrowser(browser);
             // 初始化浏览器地址栏和导航栏
             DockPanel TopBarPanel = new DockPanel()

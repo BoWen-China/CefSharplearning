@@ -19,9 +19,9 @@ namespace CefSharpExampleNetCore.Handler
                 model.AddSeparator();
             }
             // 开发者工具设置为第一位显示
-            model.AddItem(CefMenuCommand.UserFirst, "Show DevTools");
-            model.AddItem(CefMenuCommand.Reload, "Reload");
-            model.AddItem(CefMenuCommand.UserLast, "Close DevTools");
+            //model.AddItem(CefMenuCommand.UserFirst, "Show DevTools");
+            //model.AddItem(CefMenuCommand.Reload, "Reload");
+            //model.AddItem(CefMenuCommand.UserLast, "Close DevTools");
 
         }
 
