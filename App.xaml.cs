@@ -38,10 +38,7 @@ namespace CefSharpExampleNetCore
             Cef.Initialize(cefSettings, true);
             Cef.EnableHighDPISupport();
             var contx = Cef.GetGlobalRequestContext();
-            Cef.UIThreadTaskFactory.StartNew(delegate
-            {
-                contx.SetPreference("profile.default_content_setting_values.plugins", 1, out string err);
-            });
+            Cef.UIThreadTaskFactory.StartNew(() => contx.SetPreference("profile.default_content_setting_values.plugins", 1, out string err));
         }
     }
 }
